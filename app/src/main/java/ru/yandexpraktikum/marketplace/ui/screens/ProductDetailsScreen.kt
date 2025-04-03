@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,35 +40,28 @@ import ru.yandexpraktikum.marketplace.model.SampleProducts
 @Composable
 fun ProductDetailsScreen(
     productId: Int,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
-    val product = SampleProducts.products.find { it.id == productId }
-        ?: return
+    val product = SampleProducts.products.find { it.id == productId } ?: return
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = product.name) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                }
-            )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        }
-    ) { paddingValues ->
-        Box(modifier = Modifier
-            .padding(paddingValues)
+    Scaffold(topBar = {
+        TopAppBar(title = { Text(text = product.name) }, navigationIcon = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back)
+                )
+            }
+        })
+    }, snackbarHost = {
+        SnackbarHost(hostState = snackbarHostState)
+    }) { paddingValues ->
+        Box(
+            modifier = Modifier.padding(paddingValues)
         ) {
             Column(
                 modifier = Modifier
@@ -77,34 +70,32 @@ fun ProductDetailsScreen(
             ) {
                 AsyncImage(
                     model = product.imageUrl,
-                    contentDescription = null,
+                    contentDescription = product.description,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp),
                     contentScale = ContentScale.Crop
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
-                    text = product.name,
-                    style = MaterialTheme.typography.headlineMedium
+                    text = product.name, style = MaterialTheme.typography.headlineMedium
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = stringResource(R.string.price_format, product.price),
                     style = MaterialTheme.typography.titleLarge
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
-                    text = product.description,
-                    style = MaterialTheme.typography.bodyLarge
+                    text = product.description, style = MaterialTheme.typography.bodyLarge
                 )
-                
+
                 Spacer(modifier = Modifier.weight(1f))
 
                 // val buttonDescription = stringResource(R.string.add_product_to_cart, product.name)
@@ -116,8 +107,7 @@ fun ProductDetailsScreen(
                                 duration = SnackbarDuration.Short
                             )
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    }, modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
                         Icons.Default.ShoppingCart,

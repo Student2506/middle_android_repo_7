@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -41,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -63,8 +63,10 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
             SampleProducts.products
         } else {
             SampleProducts.products.filter { product ->
-                product.name.contains(searchQuery, ignoreCase = true) ||
-                        product.description.contains(searchQuery, ignoreCase = true)
+                product.name.contains(
+                    searchQuery,
+                    ignoreCase = true
+                ) || product.description.contains(searchQuery, ignoreCase = true)
             }
         }
     }
@@ -72,14 +74,13 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            //val searchBarDescription = stringResource(R.string.searchbar_description)
+            val searchBarDescription = stringResource(R.string.searchbar_description)
             SearchBar(
                 query = searchQuery,
                 onQueryChange = { searchQuery = it },
@@ -88,12 +89,14 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
                 onActiveChange = { },
                 leadingIcon = {
                     Icon(
-                        Icons.Default.Search,
-                        contentDescription = stringResource(R.string.search)
+                        Icons.Default.Search, contentDescription = stringResource(R.string.search)
                     )
                 },
                 placeholder = {
                     Text(
+                        modifier = Modifier.semantics {
+                            contentDescription = searchBarDescription
+                        },
                         text = stringResource(R.string.search_products),
                         color = Color(0xFFAAAAAA)
                     )
@@ -117,14 +120,11 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     message = context.getString(
-                                        R.string.added_to_cart,
-                                        product.name
-                                    ),
-                                    duration = SnackbarDuration.Short
+                                        R.string.added_to_cart, product.name
+                                    ), duration = SnackbarDuration.Short
                                 )
                             }
-                        }
-                    )
+                        })
                 }
             }
         }
@@ -136,22 +136,21 @@ fun ProductCard(
     modifier: Modifier = Modifier,
     product: Product,
     onClick: () -> Unit,
-    onAddToCart: () -> Unit
+    onAddToCart: () -> Unit,
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .semantics {
                 //
-            }
-    ) {
+            }) {
         Column {
             Box(
                 modifier = Modifier.clickable(onClick = onClick)
             ) {
                 AsyncImage(
                     model = product.imageUrl,
-                    contentDescription = null,
+                    contentDescription = product.description,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp),
@@ -193,8 +192,7 @@ fun ProductCard(
                         .clickable {
                             onAddToCart()
                         }
-                        .minimumInteractiveComponentSize()
-                )
+                        .minimumInteractiveComponentSize())
             }
         }
     }
