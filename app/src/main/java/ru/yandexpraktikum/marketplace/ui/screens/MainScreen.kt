@@ -97,7 +97,6 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
                             contentDescription = searchBarDescription
                         },
                         text = stringResource(R.string.search_products),
-                        color = Color(0xFFAAAAAA)
                     )
                 },
                 modifier = Modifier
@@ -173,20 +172,17 @@ fun ProductCard(
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = Color(0xFFAAAAAA)
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(R.string.price_format, product.price),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFFAAAAAA)
                     )
                 }
                 val actionDescription = stringResource(R.string.add_product_to_cart, product.name)
                 Icon(
                     Icons.Default.ShoppingCart,
                     contentDescription = stringResource(R.string.add_to_cart),
-                    tint = Color(0xFFAAAAAA),
                     modifier = Modifier
                         .clickable(onClickLabel = actionDescription) {
                             onAddToCart()
