@@ -40,7 +40,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -136,13 +138,24 @@ fun ProductCard(
     onClick: () -> Unit,
     onAddToCart: () -> Unit,
 ) {
+    val addProductLabel = stringResource(R.string.add_product_to_cart, product.name)
     Card(
         modifier = modifier
             .fillMaxWidth()
             .semantics {
-                //
+                customActions = listOf(
+                    CustomAccessibilityAction(
+                        label = addProductLabel,
+                        action = {
+                            onAddToCart()
+                            true
+                        }
+                    )
+                )
             }) {
-        Column {
+        Column(
+            modifier = Modifier.semantics(mergeDescendants = true) { }
+        ) {
             Box(
                 modifier = Modifier.clickable(onClick = onClick)
             ) {
