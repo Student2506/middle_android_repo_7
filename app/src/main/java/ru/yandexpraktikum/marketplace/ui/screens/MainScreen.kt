@@ -64,8 +64,7 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
         } else {
             SampleProducts.products.filter { product ->
                 product.name.contains(
-                    searchQuery,
-                    ignoreCase = true
+                    searchQuery, ignoreCase = true
                 ) || product.description.contains(searchQuery, ignoreCase = true)
             }
         }
@@ -183,13 +182,13 @@ fun ProductCard(
                         color = Color(0xFFAAAAAA)
                     )
                 }
-                //val actionDescription = stringResource(R.string.add_product_to_cart, product.name)
+                val actionDescription = stringResource(R.string.add_product_to_cart, product.name)
                 Icon(
                     Icons.Default.ShoppingCart,
                     contentDescription = stringResource(R.string.add_to_cart),
                     tint = Color(0xFFAAAAAA),
                     modifier = Modifier
-                        .clickable {
+                        .clickable(onClickLabel = actionDescription) {
                             onAddToCart()
                         }
                         .minimumInteractiveComponentSize())

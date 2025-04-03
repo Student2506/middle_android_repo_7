@@ -30,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
@@ -98,17 +100,19 @@ fun ProductDetailsScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                // val buttonDescription = stringResource(R.string.add_product_to_cart, product.name)
-                Button(
-                    onClick = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = context.getString(R.string.added_to_cart, product.name),
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                    }, modifier = Modifier.fillMaxWidth()
-                ) {
+                val buttonDescription = stringResource(R.string.add_product_to_cart, product.name)
+                Button(onClick = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = context.getString(R.string.added_to_cart, product.name),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }, modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics {
+                        contentDescription = buttonDescription
+                    }) {
                     Icon(
                         Icons.Default.ShoppingCart,
                         contentDescription = stringResource(R.string.add_to_cart),
