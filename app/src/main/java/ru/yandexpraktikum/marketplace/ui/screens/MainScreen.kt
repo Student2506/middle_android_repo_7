@@ -65,9 +65,8 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
             SampleProducts.products
         } else {
             SampleProducts.products.filter { product ->
-                product.name.contains(
-                    searchQuery, ignoreCase = true
-                ) || product.description.contains(searchQuery, ignoreCase = true)
+                product.name.contains(searchQuery, ignoreCase = true) ||
+                product.description.contains(searchQuery, ignoreCase = true)
             }
         }
     }
@@ -139,19 +138,20 @@ fun ProductCard(
     onAddToCart: () -> Unit,
 ) {
     val addProductLabel = stringResource(R.string.add_product_to_cart, product.name)
+    val customActionsList = remember { listOf(
+        CustomAccessibilityAction(
+            label = addProductLabel,
+            action = {
+                onAddToCart()
+                true
+            }
+        )
+    ) }
     Card(
         modifier = modifier
             .fillMaxWidth()
             .semantics {
-                customActions = listOf(
-                    CustomAccessibilityAction(
-                        label = addProductLabel,
-                        action = {
-                            onAddToCart()
-                            true
-                        }
-                    )
-                )
+                customActions = customActionsList
             }) {
         Column(
             modifier = Modifier.semantics(mergeDescendants = true) { }
